@@ -20,7 +20,6 @@ igreater = 0
 end_file = .FALSE.
 dCO_prev = 1e6
 do while (.not. end_file)
-   it = it + 1
    ! Read geometry from file.
    call readxyz(5, nat, atname, xyz, end_file)
 
