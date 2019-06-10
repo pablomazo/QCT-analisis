@@ -16,6 +16,6 @@ enddo
 999 continue
 write(*,*) 'Total # of trajs', total_traj
 do idis=1, ndis
-   write(*,*) 'Dis:',reac_dis(idis), 'prob:', dble(suma(idis))/dble(total_traj)
+   write(*,'(A8,3X,F8.3,2X,A6,3X,F5.3)') 'Dis / A:',reac_dis(idis), 'prob:', dble(suma(idis))/dble(total_traj)
 enddo
 endprogram

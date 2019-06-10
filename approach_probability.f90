@@ -11,7 +11,7 @@ integer, parameter :: nat = 6, ndis = 6, ngreater = 10
 integer :: idis, igreater
 real(8), dimension(nat,3) :: xyz
 character(len=1), dimension(nat) :: atname
-real(8), dimension(ndis), parameter :: reac_dis = (/100e0, 50e0, 20e0, 10e0, 9e0,5e0/)
+real(8), dimension(ndis), parameter :: reac_dis = (/100e0, 50e0, 20e0, 10e0, 9e0,5e0/) !(A)
 integer, dimension(ndis) :: n_in_dis
 logical :: end_file
 
@@ -34,7 +34,6 @@ do while (.not. end_file)
 	     ! If the distance is lower than the specified read_dis distance
 		 ! and the previous distance was greater, add one to the list.
          n_in_dis(idis) = 1
-         !n_in_dis(idis) = n_in_dis(idis) + 1
 	 endif
   enddo
 
