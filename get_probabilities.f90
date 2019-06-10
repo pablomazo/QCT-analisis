@@ -14,6 +14,7 @@ do
   total_traj = total_traj + 1
 enddo
 999 continue
+write(*,*) 'Total # of trajs', total_traj
 do idis=1, ndis
    write(*,*) 'Dis:',reac_dis(idis), 'prob:', dble(suma(idis))/dble(total_traj)
 enddo
