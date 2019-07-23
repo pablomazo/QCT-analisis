@@ -1,0 +1,12 @@
+&atoms
+nA=2
+nB=2
+/
+
+&system_parameters
+atnameA(1)='C',
+atnameA(2)='O',
+atnameB(1)='H',
+atnameB(2)='H',
+file_name='ini.xyz'
+/

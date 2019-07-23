@@ -1,40 +1,56 @@
 program make_approach_line
 use xyzfiles
-use io
 implicit none
-integer :: i
-real(8), dimension(:), allocatable :: xyzA, xyzB
-real(8), dimension(:,:), allocatable :: xyz
-character(len=1), dimension(:), allocatable :: atname
+integer, parameter :: nA = 4, nB = 2, nat = nA + nB
+integer, parameter :: ngreater = 20 
+integer :: i, igreater
+real(8), dimension(nA*3) :: xyzA
+real(8), dimension(nB*3) :: xyzB
+real(8), dimension(nat,3) :: xyz, minxyz
+real(8) :: dCO, dCO_prev
+character(len=1), dimension(nA), parameter :: atnameA=(/'C','O','H','H'/)
+character(len=1), dimension(nB), parameter :: atnameB=(/'O','H'/)
+character(len=1), dimension(nat) :: atname
 character(len=1) :: dumchar 
 logical :: end_file
 
 real(8),parameter :: autoA = 0.52917721092d0
 
-call read_input
+igreater = 0
+end_file = .FALSE.
+dCO_prev = 1e6
+do while (.not. end_file)
+   ! Read geometry from file.
+   call readxyz(5, nat, atname, xyz, end_file)
 
-! Allocate memory
-allocate(xyzA(nA*3), xyzB(nB*3), xyz(nat,3), atname(nat))
+   ! Calculate dCO distance
+   call COdis(xyz, dCO)
 
-! Open file with geometry.
-open(10, file=file_name, status='old')
+   ! If dCO is increasing add one to igreater
+   if (dCO > dCO_prev) then
+      ! It has been incresing for more than ngreater steps, so print approacing line
+      if (igreater > ngreater) then
+         ! Make approaching line:
+		 do i=1,nA
+            xyzA(3*(i-1)+1) = minxyz(i,1)
+            xyzA(3*(i-1)+2) = minxyz(i,2)
+            xyzA(3*(i-1)+3) = minxyz(i,3)
+		 enddo
 
-! Read file with whole geometry from standard input.
-call readxyz(10, nat, atname, xyz, end_file)
-
-! Make approaching line:
-do i=1,nA
-   xyzA(3*(i-1)+1) = xyz(i,1)
-   xyzA(3*(i-1)+2) = xyz(i,2)
-   xyzA(3*(i-1)+3) = xyz(i,3)
+		 do i=1,nB
+            xyzB(3*(i-1)+1) = minxyz(i+nA,1)
+            xyzB(3*(i-1)+2) = minxyz(i+nA,2)
+            xyzB(3*(i-1)+3) = minxyz(i+nA,3)
+		 enddo
+         call makeline(1, nA, nB, xyzA, xyzB, atnameA, atnameB)
+		 end_file = .TRUE.
+	  endif
+      igreater = igreater + 1 
+   else
+	 minxyz = xyz
+   endif
+   dCO_prev = dCO
 enddo
-
-do i=1,nB
-   xyzB(3*(i-1)+1) = xyz(i+nA,1)
-   xyzB(3*(i-1)+2) = xyz(i+nA,2)
-   xyzB(3*(i-1)+3) = xyz(i+nA,3)
-enddo
-call makeline(1, nA, nB, xyzA, xyzB, atnameA, atnameB)
 endprogram
 
 subroutine makeline(id, nA, nB, xyzA, xyzB, atnameA, atnameB)
@@ -100,4 +116,20 @@ enddo
 vec_norm = sqrt(vec_norm)
 
 vec = vec / vec_norm
+endsubroutine
+
+subroutine COdis(xyz, dCO)
+implicit none
+integer :: i
+real(8), dimension(6,3), intent(in) :: xyz
+real(8), intent(out) :: dCO
+
+dCO = 0e0
+
+do i=1,3
+   dCO = dCO + (xyz(1,i) - xyz(5,i)) * (xyz(1,i) - xyz(5,i))
+enddo
+
+dCO = sqrt(dCO)
+
 endsubroutine

@@ -9,7 +9,7 @@ PESdir=
 PES=
 OBJECTS=$(PES:%.f90=%.o)
 
-all: approach_probability get_probabilities mean_ener get_mean_ener make_approach_line
+all: approach_probability get_probabilities mean_ener get_mean_ener make_approach_line line_from_rebound.f90
 
 approach_probability: $(BIN_DIR)/approach_probability.f90
 	$(FC) $(FFLAGS) -o approach_probability.x $^ $(FLIB) -lpab $(FMODULES)
@@ -23,8 +23,11 @@ mean_ener: $(OBJECTS) $(BIN_DIR)/mean_energy_distance.f90
 get_mean_ener: $(BIN_DIR)/get_mean_ener.o
 	$(FC) $(FFLAGS) -o get_mean_ener.x $^
 
-make_approach_line: $(BIN_DIR)/make_approach_line.f90
+make_approach_line: $(BIN_DIR)/io.f90 $(BIN_DIR)/make_approach_line.f90
 	$(FC) $(FFLAGS) -o make_approach_line.x $^ $(FLIB) -lpab $(FMODULES)
+
+line_from_rebound: $(BIN_DIR)/line_from_rebound.f90
+	$(FC) $(FFLAGS) -o line_from_rebound.x $^ $(FLIB) -lpab $(FMODULES)
 
 %.o: %.f90
 	$(FC) $(FFLAGS) -c $< -o $@
