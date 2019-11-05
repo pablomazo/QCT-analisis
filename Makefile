@@ -31,3 +31,6 @@ line_from_rebound: $(BIN_DIR)/line_from_rebound.f90
 
 %.o: %.f90
 	$(FC) $(FFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(BIN_DIR)/*.o $(BIN_DIR)/*.mod $(BIN_DIR)/*.x
