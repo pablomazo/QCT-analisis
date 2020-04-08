@@ -29,6 +29,9 @@ make_approach_line: $(BIN_DIR)/io.f90 $(BIN_DIR)/make_approach_line.f90
 line_from_rebound: $(BIN_DIR)/line_from_rebound.f90
 	$(FC) $(FFLAGS) -o line_from_rebound.x $^ $(FLIB) -lpab $(FMODULES)
 
+remove_vibration: $(BIN_DIR)/remove_vibration.f90
+	$(FC) $(FFLAGS) -o remove_vibration.x $^ $(FLIB) -lpab $(FMODULES)
+
 %.o: %.f90
 	$(FC) $(FFLAGS) -c $< -o $@
 
